@@ -3,7 +3,7 @@ import {cart,
         updateCartQuantity,
         updateQuantity, 
         updateDeliveryOption} from "../../data/cart.js";
-import {deliveryOptions, getDeliveryOptions} from "../../data/deliveryOptions.js";
+import {deliveryOptions, getDeliveryOptions, calculateDeliveryDate} from "../../data/deliveryOptions.js";
 import {products, getProduct} from "../../data/products.js";
 import {formatCurrency} from "../utils/money.js";
 import {renderPaymentSummary} from "./paymentSummary.js";
@@ -21,8 +21,7 @@ cart.forEach(cartItem => {
 
     const deliveryOption = getDeliveryOptions(deliveryOptionId);
 
-    const today = dayjs();
-    const deliveryDay = today.add(deliveryOption.deliveryDays, "days").format('dddd, MMMM D');
+    const deliveryDay = calculateDeliveryDate(deliveryOption);
     
     cartItemsHTML += `
     <div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
@@ -80,8 +79,7 @@ function deliveryOptionsHTML (matchingProduct, cartItem) {
     let html = "";
 
     deliveryOptions.forEach(option => {
-        const today = dayjs();
-        const deliveryDay = today.add(option.deliveryDays, "days").format('dddd, MMMM D');
+        const deliveryDay = calculateDeliveryDate(option);
 
         const priceString = option.priceCents === 0 ? "FREE" : `$${formatCurrency(option.priceCents)} -`;
 
@@ -128,8 +126,7 @@ document.querySelectorAll(".js-delete-link")
     const productId = link.dataset.productId;
     removeFromCart(productId);
     
-    const remove = document.querySelector(`.js-cart-item-container-${productId}`);
-    remove.remove();
+    renderOrderSummary();
     renderPaymentSummary();
 
     updateCartQuantity(".js-home-link");
