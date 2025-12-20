@@ -53,8 +53,8 @@ class Clothing extends Product {
 
 export let products = []
 
-export function loadProductFetch(fun) {
-  fetch("https://supersimplebackend.dev/products").then(response => {
+export function loadProductFetch() {
+  const promise = fetch("https://supersimplebackend.dev/products").then(response => {
     return response.json();
   }).then(productsData => {
     products = productsData.map(productDetails => {
@@ -63,9 +63,9 @@ export function loadProductFetch(fun) {
       }
       return new Product(productDetails);
     })
-  }).then(() => {
-    fun();
-  })
+  });
+
+  return promise;
 }
 
 /*
