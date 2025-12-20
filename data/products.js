@@ -53,21 +53,19 @@ class Clothing extends Product {
 
 export let products = []
 
-export function loadProduct (fun) {
-  const xhr = new XMLHttpRequest();
-
-  xhr.addEventListener("load", () =>{
-    products = JSON.parse(xhr.response).map(productDetails => {
+export function loadProductFetch(fun) {
+  fetch("https://supersimplebackend.dev/products").then(response => {
+    return response.json();
+  }).then(productsData => {
+    products = productsData.map(productDetails => {
       if(productDetails.type === "clothing") {
         return new Clothing(productDetails);
       }
       return new Product(productDetails);
-    });
-
+    })
+  }).then(() => {
     fun();
-  });
-  xhr.open("GET", "https://supersimplebackend.dev/products");
-  xhr.send();
+  })
 }
 
 /*
