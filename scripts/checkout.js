@@ -6,26 +6,13 @@ import { loadProductFetch } from '../data/products.js';
 //import "../data/backend-practice.js";
 
 async function loadPage() {
-    await loadProductFetch();
-
+    try {
+        await loadProductFetch(); 
+    }
+    catch(error) {
+        console.log(error);
+    }
     renderOrderSummary();
     renderPaymentSummary();
 }
 loadPage();
-
-/*
-new Promise((resolve) => {
-    loadProductFetch(() => {
-        resolve();
-    });
-}).then(() => {
-    renderPaymentSummary();
-    renderOrderSummary();
-});
-*/
-
-/*loadProduct(() => {
-    renderPaymentSummary();
-    renderOrderSummary();
-});
-*/
